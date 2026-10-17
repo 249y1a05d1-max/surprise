@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TripEase | Travel & Ticket Booking</title>
+
+<link rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+:root {
+  --blue: #087cf5;
+  --navy: #102748;
+  --light: #f4f8ff;
+  --text: #172b4d;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: var(--text);
+}
+nav {
+  background: #102748;
+  color: white;
+  padding: 17px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.logo { font-size: 25px; font-weight: 800; color: #48b4ff; }
+nav a { color: white; text-decoration: none; margin: 8px; }
+nav a:hover { color: #48b4ff; }
+.btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.hero {
+  padding: 55px 6% 35px;
+  min-height: 330px;
+  background:
+    linear-gradient(90deg, #06162be8, #10274870),
+    url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85")
+    center/cover;
+  color: white;
+}
+.hero h1 { font-size: clamp(32px, 5vw, 54px); margin-bottom: 15px; }
+.hero p { line-height: 1.7; }
+.booking {
+  background: white;
+  color: var(--text);
+  border-radius: 18px;
+  padding: 22px;
+  margin-top: 28px;
+  max-width: 1100px;
+  box-shadow: 0 10px 35px #00152b40;
+}
+.tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.tabs button {
+  padding: 10px 17px; border: 0; border-radius: 9px;
+  background: #edf4ff; cursor: pointer; color: var(--text);
+}
+.tabs button.active { background: var(--blue); color: white; }
+.fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
+  gap: 12px;
+}
+input, select {
+  width: 100%; min-width: 0; padding: 13px;
+  border: 1px solid #d8e2f0; border-radius: 9px;
+  background: white; color: var(--text);
+}
+section { padding: 38px 6%; }
+.section-title {
+  display: flex; justify-content: space-between;
+  align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.features {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 15px; padding: 24px 6%; background: white;
+}
+.feature { text-align: center; font-size: 14px; line-height: 1.8; }
+.feature span { font-size: 28px; display: block; }
+.explore {
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 22px; align-items: start;
+}
+.panel {
+  background: white; border: 1px solid #e1eafa;
+  border-radius: 15px; padding: 20px;
+}
+#map { height: 390px; border-radius: 12px; z-index: 1; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+.filters button {
+  border: 1px solid #d9e5f5; background: white;
+  padding: 9px 12px; border-radius: 20px; cursor: pointer;
+}
+.filters button:hover { background: #e8f3ff; }
+.places {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+}
+.card {
+  background: white; border-radius: 14px;
+  overflow: hidden; border: 1px solid #e2eaf5;
+  box-shadow: 0 5px 18px #193d6410;
+  transition: transform .2s;
+}
+.card:hover { transform: translateY(-4px); }
+.card img { width: 100%; height: 145px; object-fit: cover; }
+.card-content { padding: 14px; }
+.card h3 { font-size: 17px; margin-bottom: 8px; }
+.card p { color: #64748b; font-size: 13px; line-height: 1.6; }
+.price { color: var(--blue); font-weight: bold; margin: 12px 0; }
+.card .btn { width: 100%; }
+.area-layout {
+  display: grid; grid-template-columns: 1fr 2fr; gap: 22px;
+}
+.area-list { display: grid; gap: 9px; }
+.area-list button {
+  background: white; border: 1px solid #e0e8f4;
+  padding: 13px; border-radius: 9px; text-align: left;
+  cursor: pointer; color: var(--text);
+}
+.area-list button:hover { background: #eaf4ff; }
+.area-detail {
+  background: white; border: 1px solid #e0e8f4;
+  border-radius: 15px; padding: 22px;
+}
+footer {
+  background: #102748; color: white; padding: 25px 6%;
+  display: flex; justify-content: space-between;
+  gap: 15px; flex-wrap: wrap;
+}
+footer a { color: #8bcaff; text-decoration: none; }
+#notice { margin-top: 14px; font-weight: bold; color: #087d48; }
+@media(max-width:900px) {
+  .fields { grid-template-columns: repeat(2, 1fr); }
+  .features { grid-template-columns: repeat(3, 1fr); }
+  .explore, .area-layout { grid-template-columns: 1fr; }
+  .places { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:520px) {
+  nav { padding: 16px 5%; }
+  nav a { display: inline-block; margin: 6px; }
+  .hero { padding: 40px 5% 28px; }
+  section { padding: 28px 5%; }
+  .fields, .places { grid-template-columns: 1fr; }
+  .features { grid-template-columns: repeat(2, 1fr); }
+  #map { height: 300px; }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">📍 TripEase</div>
+  <div>
+    <a href="#home">Home</a>
+    <a href="#booking">Tickets</a>
+    <a href="#places">Places</a>
+    <a href="#map-section">Map</a>
+    <a href="#areas">Area Index</a>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <h1>Book Your Next Adventure ✈️</h1>
+  <p>Discover amazing places, book your next journey and make memories.</p>
+  <p>Explore India, one destination at a time.</p>
+
+  <div class="booking" id="booking">
+    <div class="tabs">
+      <button class="active" onclick="setType('Flight',this)">✈ Flight</button>
+      <button onclick="setType('Train',this)">🚆 Train</button>
+      <button onclick="setType('Bus',this)">🚌 Bus</button>
+      <button onclick="setType('Hotel',this)">🏨 Hotel</button>
+    </div>
+
+    <form id="bookingForm">
+      <div class="fields">
+        <input id="from" placeholder="📍 From city" required>
+        <input id="to" placeholder="📍 Destination city" required>
+        <input id="date" type="date" required>
+        <select id="passengers">
+          <option value="1">1 Passenger</option>
+          <option value="2">2 Passengers</option>
+          <option value="3">3 Passengers</option>
+          <option value="4">4 Passengers</option>
+          <option value="5">5 Passengers</option>
+        </select>
+        <button class="btn" type="submit">Search Tickets</button>
+      </div>
+      <p id="notice"></p>
+    </form>
+  </div>
+</header>
+
+<div class="features">
+  <div class="feature"><span>🎫</span><b>Easy Booking</b><br>Plan your journey</div>
+  <div class="feature"><span>🗺️</span><b>Interactive Map</b><br>Explore locations</div>
+  <div class="feature"><span>📸</span><b>Popular Places</b><br>Discover India</div>
+  <div class="feature"><span>📍</span><b>Area Index</b><br>Browse regions</div>
+  <div class="feature"><span>🔒</span><b>Safe Planning</b><br>Travel with confidence</div>
+</div>
+
+<section id="map-section">
+  <div class="section-title">
+    <h2>🗺️ Explore India on Map</h2>
+    <span>Click a marker to explore</span>
+  </div>
+
+  <div class="explore">
+    <div class="panel">
+      <input id="mapSearch" placeholder="Search city or place...">
+      <div class="filters">
+        <button onclick="filterMap('all')">All</button>
+        <button onclick="filterMap('heritage')">🏛 Heritage</button>
+        <button onclick="filterMap('nature')">🌿 Nature</button>
+        <button onclick="filterMap('beach')">🏖 Beaches</button>
+        <button onclick="filterMap('religious')">🛕 Religious</button>
+      </div>
+      <div id="map"></div>
+      <p style="margin-top:12px;color:#64748b;font-size:13px">
+        Map requires an internet connection.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>📌 Find a Destination</h2>
+      <p style="margin:12px 0;color:#64748b">
+        Select a destination to view its location on the map.
+      </p>
+      <div class="area-list" id="mapPlaces"></div>
+    </div>
+  </div>
+</section>
+
+<section id="places">
+  <div class="section-title">
+    <h2>⭐ Popular Places</h2>
+    <input id="placeSearch" style="max-width:240px"
+           placeholder="Search destinations...">
+  </div>
+  <div class="filters">
+    <button onclick="filterCards('all')">All Places</button>
+    <button onclick="filterCards('heritage')">Heritage</button>
+    <button onclick="filterCards('nature')">Nature</button>
+    <button onclick="filterCards('beach')">Beaches</button>
+    <button onclick="filterCards('religious')">Religious</button>
+  </div>
+  <div class="places" id="placeCards"></div>
+</section>
+
+<section id="areas">
+  <div class="section-title">
+    <h2>📚 Area Index</h2>
+    <p>Explore destinations by region</p>
+  </div>
+
+  <div class="area-layout">
+    <div class="area-list" id="areaButtons"></div>
+    <div class="area-detail">
+      <h2 id="areaTitle">Explore India</h2>
+      <p id="areaDescription" style="margin:12px 0;line-height:1.8">
+        Select an area to discover destinations.
+      </p>
+      <div class="places" id="areaPlaces"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><b>📍 TripEase</b><p style="margin-top:8px">Travel more, worry less.</p></div>
+  <div><a href="#booking">Book Tickets</a></div>
+  <div><a href="#places">Explore Places</a></div>
+  <div><a href="#map-section">Explore Map</a></div>
+  <div>© 2026 TripEase</div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const destinations = [
+ {name:"Taj Mahal",city:"Agra, Uttar Pradesh",lat:27.1751,lng:78.0421,category:"heritage",region:"North India",price:"₹2,500",img:"photo-1564507592333-c60657eea523",desc:"Discover the iconic marble monument."},
+ {name:"Jaipur City Palace",city:"Jaipur, Rajasthan",lat:26.9258,lng:75.8237,category:"heritage",region:"North India",price:"₹1,800",img:"photo-1599661046827-dacff0c0f09a",desc:"Explore royal architecture and culture."},
+ {name:"Goa Beaches",city:"Goa",lat:15.2993,lng:74.1240,category:"beach",region:"West India",price:"₹1,200",img:"photo-1512343879784-a960bf40e7f2",desc:"Enjoy beaches and coastal scenery."},
+ {name:"Kerala Backwaters",city:"Alappuzha, Kerala",lat:9.4981,lng:76.3388,category:"nature",region:"South India",price:"₹2,000",img:"photo-1602216056096-3b40cc0c9944",desc:"Relax beside peaceful backwaters."},
+ {name:"Kashmir Valley",city:"Srinagar, Jammu and Kashmir",lat:34.0837,lng:74.7973,category:"nature",region:"North India",price:"₹3,500",img:"photo-1595815771614-ade9d652a65d",desc:"Experience mountain and lake views."},
+ {name:"Mysore Palace",city:"Mysuru, Karnataka",lat:12.3052,lng:76.6552,category:"heritage",region:"South India",price:"₹1,500",img:"photo-1606293926075-69a00dbfde81",desc:"Visit a magnificent royal palace."},
+ {name:"Varanasi Ghats",city:"Varanasi, Uttar Pradesh",lat:25.3176,lng:83.0068,category:"religious",region:"North India",price:"₹1,000",img:"photo-1561361513-2d000a50f0dc",desc:"Explore the historic riverside ghats."},
+ {name:"Golden Temple",city:"Amritsar, Punjab",lat:31.6200,lng:74.8765,category:"religious",region:"North India",price:"₹900",img:"photo-1514222134-b57cbb8ce073",desc:"Experience a renowned spiritual landmark."},
+ {name:"Araku Valley",city:"Alluri Sitharama Raju, Andhra Pradesh",lat:18.3273,lng:82.8775,category:"nature",region:"South India",price:"₹1,300",img:"photo-1472396961693-142e6e269027",desc:"Discover green hills and scenic valleys."},
+ {name:"Rameswaram",city:"Ramanathapuram, Tamil Nadu",lat:9.2876,lng:79.3129,category:"religious",region:"South India",price:"₹1,400",img:"photo-1606293926075-69a00dbfde81",desc:"Visit an important pilgrimage destination."},
+ {name:"Mumbai Marine Drive",city:"Mumbai, Maharashtra",lat:18.9432,lng:72.8235,category:"beach",region:"West India",price:"₹800",img:"photo-1570168007204-dfb528c6958f",desc:"Enjoy the city's famous seaside promenade."},
+ {name:"Darjeeling Hills",city:"Darjeeling, West Bengal",lat:27.0410,lng:88.2663,category:"nature",region:"East India",price:"₹2,200",img:"photo-1500530855697-b586d89ba3ee",desc:"Enjoy cool mountain scenery and tea gardens."}
+];
+
+const regions = {
+ "India": {desc:"Discover heritage, mountains, beaches, cities and culture across India.",places:destinations.map(d=>d.name)},
+ "North India": {desc:"Explore the Himalayas, historic forts, temples and royal cities.",places:["Taj Mahal","Jaipur City Palace","Kashmir Valley","Varanasi Ghats","Golden Temple","Darjeeling Hills"]},
+ "South India": {desc:"Discover ancient temples, green valleys, palaces and backwaters.",places:["Kerala Backwaters","Mysore Palace","Araku Valley","Rameswaram"]},
+ "West India": {desc:"Explore coastal destinations, bustling cities and royal heritage.",places:["Goa Beaches","Mumbai Marine Drive","Jaipur City Palace"]},
+ "East India": {desc:"Discover green hills, tea gardens and cultural landmarks.",places:["Darjeeling Hills","Varanasi Ghats"]},
+ "Hill Stations": {desc:"Find peaceful mountain escapes and beautiful landscapes.",places:["Kashmir Valley","Araku Valley","Darjeeling Hills"]},
+ "Beaches": {desc:"Explore India's coastal getaways.",places:["Goa Beaches","Mumbai Marine Drive"]},
+ "Heritage Sites": {desc:"Discover architecture, history and royal landmarks.",places:["Taj Mahal","Jaipur City Palace","Mysore Palace"]},
+ "Religious Places": {desc:"Visit important spiritual and pilgrimage destinations.",places:["Varanasi Ghats","Golden Temple","Rameswaram"]}
+};
+
+let selectedType = "Flight";
+let selectedCategory = "all";
+let activeRegion = "India";
+
+const map = L.map('map').setView([22.5, 79], 4.5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+ attribution:'&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const markers = {};
+destinations.forEach(d=>{
+ const marker = L.marker([d.lat,d.lng]).addTo(map);
+ marker.bindPopup(`<b>${d.name}</b><br>${d.city}<br><button onclick="showDestination('${d.name}')">Explore place</button>`);
+ markers[d.name] = marker;
+});
+
+function showDestination(name) {
+ const d = destinations.find(x=>x.name===name);
+ if(!d) return;
+ map.setView([d.lat,d.lng],10);
+ markers[name].openPopup();
+ document.getElementById('map-section').scrollIntoView({behavior:'smooth'});
+}
+
+function renderMapList(list=destinations) {
+ document.getElementById('mapPlaces').innerHTML = list.map(d=>
+ `<button onclick="showDestination('${d.name}')">📍 ${d.name}<br><small>${d.city}</small></button>`
+ ).join('') || '<p>No destinations found.</p>';
+}
+
+function filterMap(category) {
+ renderMapList(category==='all'?destinations:destinations.filter(d=>d.category===category));
+ Object.entries(markers).forEach(([name,marker])=>{
+  const d=destinations.find(x=>x.name===name);
+  if(category==='all'||d.category===category) marker.addTo(map);
+  else map.removeLayer(marker);
+ });
+}
+
+function renderCards(list) {
+ document.getElementById('placeCards').innerHTML = list.map(d=>`
+ <article class="card">
+ <img src="https://images.unsplash.com/${d.img}?auto=format&fit=crop&w=650&q=80"
+ alt="${d.name}" loading="lazy">
+ <div class="card-content">
+ <h3>${d.name}</h3><p>📍 ${d.city}</p>
+ <p style="margin-top:8px">${d.desc}</p>
+ <div class="price">From ${d.price}</div>
+ <button class="btn" onclick="showDestination('${d.name}')">View on Map ↗</button>
+ </div></article>`).join('') || '<p>No destinations found.</p>';
+}
+
+function filterCards(category) {
+ selectedCategory=category;
+ updateCards();
+}
+
+function updateCards() {
+ const q=document.getElementById('placeSearch').value.toLowerCase();
+ const list=destinations.filter(d=>
+ (selectedCategory==='all'||d.category===selectedCategory) &&
+ (d.name+' '+d.city+' '+d.region).toLowerCase().includes(q)
+ );
+ renderCards(list);
+}
+
+document.getElementById('placeSearch').addEventListener('input',updateCards);
+
+function renderRegions() {
+ document.getElementById('areaButtons').innerHTML=Object.keys(regions).map(region=>
+ `<button onclick="selectRegion('${region}')">🗺️ ${region} →</button>`
+ ).join('');
+}
+
+function selectRegion(region) {
+ activeRegion=region;
+ const info=regions[region];
+ document.getElementById('areaTitle').textContent=region;
+ document.getElementById('areaDescription').textContent=info.desc;
+ const list=destinations.filter(d=>info.places.includes(d.name));
+ document.getElementById('areaPlaces').innerHTML=list.map(d=>`
+ <article class="card">
+ <img src="https://images.unsplash.com/${d.img}?auto=format&fit=crop&w=500&q=80" alt="${d.name}" loading="lazy">
+ <div class="card-content"><h3>${d.name}</h3><p>${d.city}</p>
+ <button class="btn" style="margin-top:12px" onclick="showDestination('${d.name}')">Explore</button>
+ </div></article>`).join('');
+}
+
+function setType(type,button) {
+ selectedType=type;
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+ button.classList.add('active');
+ document.getElementById('from').placeholder=type==='Hotel'?'📍 City or hotel area':'📍 From city';
+ document.getElementById('to').placeholder=type==='Hotel'?'📍 Hotel or destination':'📍 Destination city';
+}
+
+const dateInput=document.getElementById('date');
+const today=new Date();
+dateInput.min=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+dateInput.value=dateInput.min;
+
+document.getElementById('bookingForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const from=document.getElementById('from').value.trim();
+ const to=document.getElementById('to').value.trim();
+ const date=dateInput.value;
+ const passengers=document.getElementById('passengers').value;
+ const notice=document.getElementById('notice');
+
+ if(from.toLowerCase()===to.toLowerCase()) {
+   notice.style.color='#c0392b';
+   notice.textContent='Choose different locations for your journey.';
+   return;
+ }
+ notice.style.color='#087d48';
+ notice.textContent=`Demo search: ${selectedType} | ${from} → ${to} | ${date} | ${passengers} passenger(s). No ticket has been booked.`;
+});
+
+document.getElementById('mapSearch').addEventListener('input',e=>{
+ const q=e.target.value.toLowerCase();
+ renderMapList(destinations.filter(d=>(d.name+' '+d.city+' '+d.region).toLowerCase().includes(q)));
+});
+
+renderCards(destinations);
+renderMapList();
+renderRegions();
+selectRegion('India');
+</script>
+
+</body>
+</html>
