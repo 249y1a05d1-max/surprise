@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us | TripEase</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#087cf5;--navy:#102748;--bg:#f4f8ff}
+body{font-family:Arial,sans-serif;background:var(--bg);color:#172b4d}
+nav{background:var(--navy);color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#48b4ff}
+nav a{color:white;text-decoration:none;margin:8px}
+nav a:hover{color:#48b4ff}
+.hero{padding:85px 7%;color:white;background:linear-gradient(90deg,#07172be8,#10274855),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero h1{font-size:clamp(38px,6vw,60px);margin-bottom:18px}
+.hero p{line-height:1.8;max-width:600px;font-size:17px}
+.btn{display:inline-block;background:var(--blue);color:white;text-decoration:none;padding:14px 22px;border-radius:9px;margin-top:24px;font-weight:bold}
+section{padding:55px 7%}
+h2{font-size:30px;margin-bottom:18px}
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center}
+.intro img{width:100%;height:350px;object-fit:cover;border-radius:20px}
+.intro p,.mission p{line-height:1.9;color:#596b83;margin-bottom:12px}
+.eyebrow{color:var(--blue);font-weight:bold;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;background:white}
+.stat{text-align:center;padding:25px 10px;border-radius:15px;background:#edf5ff}
+.stat h3{font-size:32px;color:var(--blue);margin-bottom:8px}
+.stat p{color:#64748b}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:white;padding:25px;border-radius:16px;border:1px solid #e1eafa;box-shadow:0 8px 25px #10274808}
+.card .icon{font-size:35px;margin-bottom:15px}
+.card h3{margin-bottom:12px}
+.card p{line-height:1.8;color:#64748b}
+.mission{background:#eaf3ff;border-radius:20px;padding:35px}
+.cta{text-align:center;background:var(--navy);color:white;border-radius:20px;padding:45px 20px}
+.cta p{color:#d5e4fa;line-height:1.8}
+footer{background:var(--navy);color:white;padding:25px 7%;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+footer a{color:#8bcaff;text-decoration:none}
+@media(max-width:700px){
+.intro{grid-template-columns:1fr}
+.stats{grid-template-columns:repeat(2,1fr)}
+.cards{grid-template-columns:1fr}
+.hero{padding:60px 7%}
+section{padding:38px 6%}
+.intro img{height:260px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+ <div class="logo">📍 TripEase</div>
+ <div>
+  <a href="index.html">Home</a>
+  <a href="index.html#booking">Tickets</a>
+  <a href="index.html#places">Places</a>
+  <a href="index.html#map-section">Map</a>
+  <a href="about.html">About</a>
+ </div>
+</nav>
+
+<header class="hero">
+ <p class="eyebrow" style="color:#8bcaff">WELCOME TO TRIPEASE</p>
+ <h1>Travel More.<br>Discover More.</h1>
+ <p>Your journey begins here. Explore beautiful destinations,
+ discover new cultures and plan unforgettable adventures with TripEase.</p>
+ <a class="btn" href="index.html#places">Explore Destinations →</a>
+</header>
+
+<section class="intro">
+ <div>
+  <p class="eyebrow">OUR STORY</p>
+  <h2>Making Every Journey Special ✈️</h2>
+  <p>TripEase is a travel discovery website designed to make
+  exploring destinations easier and more enjoyable.</p>
+  <p>From beautiful beaches and mountain escapes to historic
+  monuments and spiritual destinations, we bring travel inspiration
+  together in one place.</p>
+  <p>Our goal is to help travellers discover places, explore maps
+  and plan their next adventure with confidence.</p>
+  <a class="btn" href="index.html#booking">Plan Your Trip</a>
+ </div>
+ <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=85" alt="Traveller exploring the world">
+</section>
+
+<section class="stats">
+ <div class="stat"><h3>12+</h3><p>Featured Destinations</p></div>
+ <div class="stat"><h3>5</h3><p>Travel Categories</p></div>
+ <div class="stat"><h3>24/7</h3><p>Explore Anytime</p></div>
+ <div class="stat"><h3>1</h3><p>Travel Hub</p></div>
+</section>
+
+<section>
+ <p class="eyebrow">WHAT WE DO</p>
+ <h2>Everything for Your Next Adventure</h2>
+ <div class="cards">
+  <div class="card">
+   <div class="icon">🎫</div>
+   <h3>Ticket Search</h3>
+   <p>Enter your travel details to explore ticket-search options for flights, trains and buses.</p>
+  </div>
+  <div class="card">
+   <div class="icon">🗺️</div>
+   <h3>Interactive Maps</h3>
+   <p>Discover destinations, view their locations and explore places on an interactive map.</p>
+  </div>
+  <div class="card">
+   <div class="icon">📍</div>
+   <h3>Area Explorer</h3>
+   <p>Browse destinations by region, discover famous attractions and find new places to visit.</p>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="mission">
+  <p class="eyebrow">OUR MISSION</p>
+  <h2>Inspiring People to Explore 🌍</h2>
+  <p>We want to make travel discovery simple, accessible and enjoyable.
+  We bring destinations, maps and trip-planning tools together so
+  travellers can spend more time discovering the world.</p>
+  <p><b>Our vision:</b> Make every journey easier to plan and every
+  destination easier to discover.</p>
+ </div>
+</section>
+
+<section>
+ <div class="cta">
+  <h2>Ready for Your Next Adventure?</h2>
+  <p>Discover amazing destinations and start planning your next trip today.</p>
+  <a class="btn" href="index.html#places">Explore Places →</a>
+ </div>
+</section>
+
+<footer>
+ <div><b>📍 TripEase</b><p style="margin-top:8px">Travel more, worry less.</p></div>
+ <div><a href="index.html">Home</a> · <a href="index.html#booking">Tickets</a> · <a href="index.html#places">Places</a></div>
+ <div>© 2026 TripEase</div>
+</footer>
+
+</body>
+</html>
